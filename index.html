@@ -17,17 +17,28 @@
           <img :src="image" />
         </div>
         <div class="product-info">
-          <p>{{ product }}</p>
+          <h1>{{ brand }}</h1>
           <div class="color">
             <div
               class="color-box"
-              v-for="lipstick in lipsticks"
+              v-for="(lipstick, index) in lipsticks"
               :key="lipstick.lipstickId"
               :style="{backgroundColor: lipstick.lipstickColor}"
-              @mouseover="updateProduct(lipstick.lipstickImage)"
+              @mouseover="updateProduct(index)"
             ></div>
           </div>
-          <button class="button" v-on:click="addToCart">Add to cart</button>
+          <div class="product-stock">
+            <button
+              class="button"
+              v-on:click="addToCart"
+              :disabled="!inStock"
+              :class="{disabledButton: !inStock}"
+            >
+              Add to cart
+            </button>
+            <p v-if="inStock">In stock</p>
+            <p v-else>Out of stock</p>
+          </div>
         </div>
       </div>
     </div>
@@ -79,6 +90,16 @@
         margin-right: 0px;
       }
 
+      .product-stock {
+        display: flex;
+        align-items: center;
+        margin-top: 30px;
+      }
+
+      .product-stock p {
+        padding-left: 10px;
+      }
+
       .button {
         display: flex;
         justify-content: center;
@@ -89,8 +110,12 @@
         border: none;
         color: #fff;
         background-color: #d92f52;
-        margin-top: 30px;
         cursor: pointer;
+      }
+
+      .disabledButton {
+        background-color: rgb(212, 208, 208);
+        cursor: not-allowed;
       }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.5.13/dist/vue.js"></script>
