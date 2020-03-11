@@ -11,36 +11,7 @@
   </head>
   <body>
     <div id="app">
-      <div class="product">
-        <div class="cart"><p>Cart({{ cart }})</p></div>
-        <div class="product-image">
-          <img :src="image" />
-        </div>
-        <div class="product-info">
-          <h1>{{ brand }}</h1>
-          <div class="color">
-            <div
-              class="color-box"
-              v-for="(lipstick, index) in lipsticks"
-              :key="lipstick.lipstickId"
-              :style="{backgroundColor: lipstick.lipstickColor}"
-              @mouseover="updateProduct(index)"
-            ></div>
-          </div>
-          <div class="product-stock">
-            <button
-              class="button"
-              v-on:click="addToCart"
-              :disabled="!inStock"
-              :class="{disabledButton: !inStock}"
-            >
-              Add to cart
-            </button>
-            <p v-if="inStock">In stock</p>
-            <p v-else>Out of stock</p>
-          </div>
-        </div>
-      </div>
+      <product :premium="premium"></product>
     </div>
     <style>
       * {
