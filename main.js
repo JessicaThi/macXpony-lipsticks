@@ -8,7 +8,6 @@ Vue.component("product", {
   },
   template: `
   <div class="product">
-    <div class="cart"><p>Cart({{ cart }})</p></div>
     <div class="product-image">
       <img :src="image" />
     </div>
@@ -66,8 +65,7 @@ Vue.component("product", {
           lipstickImage: "images/love-is-blind.png",
           lipstickQuantity: 11
         }
-      ],
-      cart: 0
+      ]
     };
   },
   methods: {
@@ -77,7 +75,10 @@ Vue.component("product", {
     },
 
     addToCart() {
-      this.cart += 1;
+      this.$emit(
+        "add-to-cart",
+        this.lipsticks[this.selectedLipstick].lipstickId
+      );
     }
   },
   computed: {
@@ -99,9 +100,96 @@ Vue.component("product", {
   }
 });
 
+Vue.component("product-review", {
+  template: `
+  <div class="product-review">
+    <h2>Reviews</h2>
+    <p v-if="!reviews.length">There are no review yet.</p>
+    <ul>
+      <li v-for="review in reviews">
+        <p>{{ review.name }}</p>
+        <p>Rating: {{ review.rating }}</p>
+        <p>{{ review.review }}</p>
+      </li>
+    </ul>
+    <form class="review-form" @submit.prevent="onSubmit">
+
+      <div class="error" v-if="errors.length">
+        <b>Please correct the following error(s):</b>
+        <ul>
+          <li v-for="error in errors">{{ error }}</li>
+        </ul>
+      </div>
+
+      <div class="field">
+        <label for="name">Name:</label>
+        <input id="name" v-model="name">
+      </div>
+      
+      <div class="field">
+        <label for="review">Review:</label>      
+        <textarea id="review" v-model="review" rows="4"></textarea>
+      </div>
+      
+      <div class="field">
+        <label for="rating">Rating:</label>
+        <select id="rating" v-model.number="rating">
+          <option>5</option>
+          <option>4</option>
+          <option>3</option>
+          <option>2</option>
+          <option>1</option>
+        </select>
+      </div>
+          
+      <div class="button-form">
+        <input type="submit" value="Submit" class="button">  
+      </div>    
+    </form>
+  </div>
+  `,
+  data() {
+    return {
+      name: null,
+      review: null,
+      rating: null,
+      errors: [],
+      reviews: []
+    };
+  },
+  methods: {
+    addReview(productReview) {
+      this.reviews.push(productReview);
+    },
+    onSubmit() {
+      if (this.name && this.review && this.rating) {
+        let productReview = {
+          name: this.name,
+          review: this.review,
+          rating: this.rating
+        };
+        this.addReview(productReview);
+        this.name = null;
+        this.review = null;
+        this.rating = null;
+      } else {
+        if (!this.name) this.errors.push("Name required.");
+        if (!this.review) this.errors.push("Review required.");
+        if (!this.rating) this.errors.push("Rating required.");
+      }
+    }
+  }
+});
+
 var app = new Vue({
   el: "#app",
   data: {
-    premium: true
+    premium: true,
+    cart: []
+  },
+  methods: {
+    updateCart(id) {
+      this.cart.push(id);
+    }
   }
 });
