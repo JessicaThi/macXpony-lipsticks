@@ -103,15 +103,6 @@ Vue.component("product", {
 Vue.component("product-review", {
   template: `
   <div class="product-review">
-    <h2>Reviews</h2>
-    <p v-if="!reviews.length">There are no review yet.</p>
-    <ul>
-      <li v-for="review in reviews">
-        <p>{{ review.name }}</p>
-        <p>Rating: {{ review.rating }}</p>
-        <p>{{ review.review }}</p>
-      </li>
-    </ul>
     <form class="review-form" @submit.prevent="onSubmit">
 
       <div class="error" v-if="errors.length">
@@ -153,13 +144,16 @@ Vue.component("product-review", {
       name: null,
       review: null,
       rating: null,
-      errors: [],
-      reviews: []
+      errors: []
+      // reviews: []
     };
   },
   methods: {
+    // addReview(productReview) {
+    //   this.reviews.push(productReview);
+    // },
     addReview(productReview) {
-      this.reviews.push(productReview);
+      this.$emit("add-review", productReview);
     },
     onSubmit() {
       if (this.name && this.review && this.rating) {
@@ -179,6 +173,39 @@ Vue.component("product-review", {
         if (!this.review) this.errors.push("Review required.");
         if (!this.rating) this.errors.push("Rating required.");
       }
+    }
+  }
+});
+
+Vue.component("product-tab", {
+  template: `
+  <div class="product-tab">
+    <span :class="{activeTab: selectedTab === tab}" class="tab" v-for="(tab, index) in tabs" :key="index" @click="selectedTab = tab">{{ tab }}</span>
+
+    <div v-if="selectedTab == 'Reviews'" class="display-review">
+      <p v-if="!reviews.length">There are no review yet.</p>
+      <ul>
+        <li v-for="review in reviews">
+          <p>{{ review.name }}</p>
+          <p>Rating: {{ review.rating }}</p>
+          <p>{{ review.review }}</p>
+        </li>
+      </ul>
+    </div>
+
+    <product-review v-else @add-review="addReview"></product-review>
+  </div>
+  `,
+  data() {
+    return {
+      tabs: ["Reviews", "Make a review"],
+      selectedTab: "Reviews",
+      reviews: []
+    };
+  },
+  methods: {
+    addReview(productReview) {
+      this.reviews.push(productReview);
     }
   }
 });

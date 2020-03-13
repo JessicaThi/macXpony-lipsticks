@@ -13,7 +13,7 @@
     <div id="app">
       <div class="cart"><p>Cart({{ cart.length }})</p></div>
       <product :premium="premium" @add-to-cart="updateCart"></product>
-      <product-review></product-review>
+      <product-tab></product-tab>
     </div>
     <style>
       * {
@@ -99,33 +99,43 @@
         cursor: not-allowed;
       }
 
-      .product-review {
+      .product-tab {
         max-width: 400px;
+        min-height: 370px;
         width: 90%;
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        align-content: flex-start;
+      }
+
+      .product-review {
         display: flex;
         flex-direction: column;
         align-items: center;
+        flex: 1;
       }
 
-      .product-review > h2,
+      .display-review {
+        flex-basis: 100%;
+      }
+
+      /* .product-review > h2,
       .product-review > p,
       .product-review > ul {
         width: 100%;
-      }
+      } */
 
-      .product-review h2 {
-        padding-bottom: 5px;
-      }
-
-      .product-review > p {
+      .display-review > p {
         padding-bottom: 20px;
+        text-align: center;
       }
 
-      .product-review ul {
+      ul {
         list-style: none;
       }
 
-      .product-review li {
+      .product-tab li {
         border: 1px solid rgb(212, 208, 208);
         padding: 10px;
         border-radius: 4px;
@@ -172,6 +182,15 @@
         display: flex;
         justify-content: center;
         padding-top: 12px;
+      }
+
+      .activeTab {
+        color: #d92f52;
+        text-decoration: underline;
+      }
+
+      .tab {
+        padding: 10px;
       }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.5.13/dist/vue.js"></script>
